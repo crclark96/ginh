@@ -19,7 +19,8 @@ function separator {
   printf "\n"
 }
 
-while getopts "h?n:f:c:l:" opt; do
+while getopts "h?n:f:c:l:" opt
+do
   case "$opt" in
   h|\?)
     show_help
