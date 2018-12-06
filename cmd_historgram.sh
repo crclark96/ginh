@@ -57,7 +57,7 @@ done
 
 for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
 # calculate frequencies
-do 
+do
   (( FREQ[N]=COUNTS[N] * LINE_LEN / COUNTS[0] ))
 done
 
@@ -73,7 +73,7 @@ do
   for M in ${CMDS[$N]}
   do
     printf "%s " $M
-  done 
+  done
   printf "\n"
 done
 
