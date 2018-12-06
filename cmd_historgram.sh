@@ -70,10 +70,7 @@ do
     printf "$CHART_CHAR"
   done
   printf "  "
-  for M in ${CMDS[$N]}
-  do
-    printf "%s " $M
-  done
+  printf "%s " ${CMDS[$N]}
   printf "\n"
 done
 
