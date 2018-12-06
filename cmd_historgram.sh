@@ -6,6 +6,7 @@ NUM_ENTRIES=15
 CHART_CHAR='='
 HISTFILE="$HOME/.bash_history"
 OPTIND=1 # reset getopts
+MAX_LEN=0
 
 function show_help {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
@@ -53,6 +54,11 @@ for (( N=0; N<=$NUM_ENTRIES; N++ ))
 do
   CMDS[$N]=$(cat $HISTFILE | sort | uniq -c | sort -n | tail -n `expr $N + 1` | head -n 1)
   COUNTS[$N]=$(echo ${CMDS[$N]} | awk '{print $1}')
+  MAX_LEN=$((
+  ${#CMDS[$N]} > MAX_LEN ?
+    ${#CMDS[$N]}:
+    MAX_LEN
+  ))
 done
 
 for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
