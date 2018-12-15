@@ -58,13 +58,16 @@ do
   CMDS[$N]=$(cat $HISTFILE | sort | uniq -c | sort -n | tail -n `expr $N + 1` | head -n 1)
   COUNTS[$N]=$(echo ${CMDS[$N]} | awk '{print $1}')
   if [ $MAX_LEN -gt 0 ]; then
+    S=$(echo ${CMDS[$N]} | cut -d' ' -f2-)
     MAX_LEN=$((
-    ${#CMDS[$N]} > $MAX_LEN ?
-      ${#CMDS[$N]}:
+    ${#S} > $MAX_LEN ?
+      ${#S}:
       $MAX_LEN
     ))
   fi
 done
+
+MAX_LEN=$(($MAX_LEN > 0 ? $MAX_LEN+1: 0))
 
 for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
 # calculate frequencies
@@ -77,7 +80,8 @@ separator
 for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
 do
   if [ $MAX_LEN -gt 0 ]; then
-    for (( M=0; M<=MAX_LEN-${#CMDS[$N]}; M++ ))
+    S=$(echo ${CMDS[$N]} | cut -d' ' -f2-)
+    for (( M=0; M<=MAX_LEN-${#S} - 2; M++ ))
     do
       printf " "
     done
