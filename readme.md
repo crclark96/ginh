@@ -29,3 +29,10 @@ entries=15, file=/Users/crclark/.bash_history, char==, len=90
                open ======  25
 -------------------------------------------------------------------------------------------
 ```
+
+## help
+
+if you don't see your graph updating after running a few commands, this is 
+  because the working history is stored in memory, and not the history file.
+  running `history -a` should update the history file and you'll be good to 
+  go!
