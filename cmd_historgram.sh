@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -a COUNTS FREQ CMDS
-LINE_LEN=80
+LINE_LEN=`expr $(/usr/bin/tput cols) - 10`
 NUM_ENTRIES=15
 CHART_CHAR='='
 HISTFILE="$HOME/.bash_history"
