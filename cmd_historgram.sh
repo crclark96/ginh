@@ -5,7 +5,7 @@ line_len=`expr $(/usr/bin/tput cols) - 2` # get terminal width
 num_entries=15
 chart_char='='
 histfile="$HOME/.bash_history"
-optind=1 # reset getopts
+OPTIND=1 # reset getopts
 max_len=0
 
 function show_help {
@@ -42,7 +42,7 @@ do
   esac
 done
 
-shift $((optind-1))
+shift $((OPTIND-1))
 
 [ "${1:-}" = "--" ] && shift
 
