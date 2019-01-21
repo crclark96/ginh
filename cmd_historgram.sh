@@ -1,19 +1,19 @@
 #!/bin/bash
 
-declare -a COUNTS FREQ CMDS
-LINE_LEN=`expr $(/usr/bin/tput cols) - 2` # get terminal width
-NUM_ENTRIES=15
-CHART_CHAR='='
-HISTFILE="$HOME/.bash_history"
-OPTIND=1 # reset getopts
-MAX_LEN=0
+declare -a counts freq cmds
+line_len=`expr $(/usr/bin/tput cols) - 2` # get terminal width
+num_entries=15
+chart_char='='
+histfile="$HOME/.bash_history"
+optind=1 # reset getopts
+max_len=0
 
 function show_help {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
 function separator {
-  for (( N=0; N<=$LINE_LEN; N++ ))
+  for (( n=0; n<=$line_len; n++ ))
   do
     printf "-"
   done
@@ -28,66 +28,66 @@ do
     exit 0
     ;;
   n)
-    NUM_ENTRIES=$OPTARG
+    num_entries=$OPTARG
     ;;
   f)
-    HISTFILE=$OPTARG
+    histfile=$OPTARG
     ;;
   c)
-    CHART_CHAR="$OPTARG"
+    chart_char="$OPTARG"
     ;;
   l)
-    LINE_LEN=$OPTARG
+    line_len=$OPTARG
     ;;
   esac
 done
 
-shift $((OPTIND-1))
+shift $((optind-1))
 
 [ "${1:-}" = "--" ] && shift
 
-echo "entries=$NUM_ENTRIES, file=$HISTFILE, char=$CHART_CHAR, len=$LINE_LEN"
+echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-CALC=$(cat $HISTFILE | awk '{print $1}' | sort | uniq -c | sort -rn)
+calc=$(cat $histfile | awk '{print $1}' | sort | uniq -c | sort -rn)
 
-for (( N=0; N<=$NUM_ENTRIES; N++ ))
+for (( n=0; n<=$num_entries; n++ ))
 # gather counts and cmds
 do
-  CMDS[$N]=$(echo "$CALC" | head -n `expr 1 + $N` | tail -n 1)
-  COUNTS[$N]=$(echo ${CMDS[$N]} | awk '{print $1}')
-  S=$(echo ${CMDS[$N]} | cut -d' ' -f2-)
-  MAX_LEN=$((
-  ${#S} > $MAX_LEN ?
-    ${#S}:
-    $MAX_LEN
+  cmds[$n]=$(echo "$calc" | head -n `expr 1 + $n` | tail -n 1)
+  counts[$n]=$(echo ${cmds[$n]} | awk '{print $1}')
+  s=$(echo ${cmds[$n]} | cut -d' ' -f2-)
+  max_len=$((
+  ${#s} > $max_len ?
+    ${#s}:
+    $max_len
   ))
 done
 
-MAX_LEN=$(($MAX_LEN + 1))
+max_len=$(($max_len + 1))
 
-for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
+for (( n=0; n<=`expr $num_entries - 1`; n++ ))
 # calculate frequencies
 do
-  (( FREQ[N]=COUNTS[N] * `expr $LINE_LEN - $MAX_LEN - ${#COUNTS[0]} - 2` / COUNTS[0] ))
+  (( freq[n]=counts[n] * `expr $line_len - $max_len - ${#counts[0]} - 2` / counts[0] ))
 done
 
 separator
 
-for (( N=0; N<=`expr $NUM_ENTRIES - 1`; N++ ))
+for (( n=0; n<=`expr $num_entries - 1`; n++ ))
 do
-  S=$(echo ${CMDS[$N]} | cut -d' ' -f2-)
-  for (( M=0; M<=MAX_LEN-${#S} - 2; M++ ))
+  s=$(echo ${cmds[$n]} | cut -d' ' -f2-)
+  for (( m=0; m<=max_len-${#s} - 2; m++ ))
   do
     printf " "
   done
-  printf "%s " $(echo ${CMDS[$N]} | cut -d' ' -f2-)
+  printf "%s " $(echo ${cmds[$n]} | cut -d' ' -f2-)
   
-  for (( M=0; M<=FREQ[$N]; M++ ))
+  for (( m=0; m<=freq[$n]; m++ ))
   do
-    printf "$CHART_CHAR"
+    printf "$chart_char"
   done
   printf "  "
-  printf "%s" $(echo ${CMDS[$N]} | awk '{print $1}')
+  printf "%s" $(echo ${cmds[$n]} | awk '{print $1}')
   
   printf "\n"
 done
