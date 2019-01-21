@@ -48,10 +48,12 @@ shift $((OPTIND-1))
 
 echo "entries=$NUM_ENTRIES, file=$HISTFILE, char=$CHART_CHAR, len=$LINE_LEN"
 
+CALC=$(cat $HISTFILE | awk '{print $1}' | sort | uniq -c | sort -rn)
+
 for (( N=0; N<=$NUM_ENTRIES; N++ ))
 # gather counts and cmds
 do
-  CMDS[$N]=$(cat $HISTFILE | awk '{print $1}' | sort | uniq -c | sort -n | tail -n `expr $N + 1` | head -n 1)
+  CMDS[$N]=$(echo "$CALC" | head -n `expr 1 + $N` | tail -n 1)
   COUNTS[$N]=$(echo ${CMDS[$N]} | awk '{print $1}')
   S=$(echo ${CMDS[$N]} | cut -d' ' -f2-)
   MAX_LEN=$((
