@@ -53,7 +53,7 @@ calc=$(cat $histfile | awk '{print $1}' | sort | uniq -c | sort -rn)
 for (( n=0; n<=$num_entries; n++ ))
 # gather counts and cmds
 do
-  cmds[$n]=$(echo "$calc" | head -n `expr 1 + $n` | tail -n 1)
+  cmds[$n]=$(echo "$calc" | sed -ne "`expr 1 + $n`p")
   counts[$n]=$(echo ${cmds[$n]} | awk '{print $1}')
   s=$(echo ${cmds[$n]} | cut -d' ' -f2-)
   max_len=$((
