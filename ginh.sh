@@ -4,7 +4,9 @@ declare -a counts freq cmds
 line_len=`expr $(/usr/bin/tput cols) - 2` # get terminal width
 num_entries=15
 chart_char='='
-histfile="$HOME/.bash_history"
+# Get the calling shell
+shell=$(ps -o comm=$PPID | grep $(echo $0 | cut -d"/" -f2-) -B 1 | head -1)
+histfile=$($shell -ci "echo \$HISTFILE")
 OPTIND=1 # reset getopts
 max_len=0
 
@@ -81,14 +83,14 @@ do
     printf " "
   done
   printf "%s " $(echo ${cmds[$n]} | cut -d' ' -f2-)
-  
+
   for (( m=0; m<=freq[$n]; m++ ))
   do
     printf "$chart_char"
   done
   printf "  "
   printf "%s" $(echo ${cmds[$n]} | awk '{print $1}')
-  
+
   printf "\n"
 done
 
