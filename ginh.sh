@@ -48,7 +48,7 @@ shift $((OPTIND-1))
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-calc=$(cat $histfile | awk '{print $1}' | sort | uniq -c | sort -rn)
+calc=$(grep -v -E '^\s*$|^\s+' $histfile | awk '{print $1}' | sort | uniq -c | sort -rn)
 
 for (( n=0; n<=$num_entries; n++ ))
 # gather counts and cmds
