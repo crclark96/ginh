@@ -11,7 +11,7 @@ OPTIND=1 # reset getopts
 max_len=0
 
 # check for zsh extended history format style
-$shell -ci "setopt" |& grep extendedhistory >/dev/null
+$shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
 zsh_extended_history=$(expr 1 - $?)
 
 function show_help {
