@@ -1,10 +1,12 @@
 # ginh.sh
 
+ginh is not a histogram
+
 usage: `./ginh.sh [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]`
 
 `ginh.sh` generates a bar chart of your most frequently used shell commands,
-according to your `.bash_history` file (or another file of your choosing, using the `-f`
-flag). 
+according to your shell's history file (or another file of your choosing, using
+the `-f` flag). 
 
 example:
 
