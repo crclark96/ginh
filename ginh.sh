@@ -10,6 +10,10 @@ histfile=$($shell -ci "echo \$HISTFILE")
 OPTIND=1 # reset getopts
 max_len=0
 
+# check for zsh extended history format style
+$shell -ci "setopt" |& grep extendedhistory >/dev/null
+zsh_extended_history=$(expr 1 - $?)
+
 function show_help {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
