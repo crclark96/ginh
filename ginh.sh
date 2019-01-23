@@ -5,7 +5,7 @@ line_len=`expr $(/usr/bin/tput cols) - 2` # get terminal width
 num_entries=15
 chart_char='='
 # Get the calling shell
-shell=$(ps -o comm=$PPID | grep $(echo $0 | cut -d"/" -f2-) -B 1 | head -1)
+shell=$(ps -p $PPID -o comm=)
 histfile=$($shell -ci "echo \$HISTFILE")
 OPTIND=1 # reset getopts
 max_len=0
