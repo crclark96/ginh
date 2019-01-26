@@ -4,15 +4,8 @@ declare -a counts freq cmds
 line_len=`expr $(/usr/bin/tput cols) - 2` # get terminal width
 num_entries=15
 chart_char='='
-# Get the calling shell
-shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
-histfile=$($shell -ci "echo \$HISTFILE")
 OPTIND=1 # reset getopts
 max_len=0
-
-# check for zsh extended history format style
-$shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
-zsh_extended_history=$(expr 1 - $?)
 
 function show_help {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
@@ -25,6 +18,21 @@ function separator {
   done
   printf "\n"
 }
+
+function get_shell {
+  shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
+
+  # check for zsh extended history format style
+  $shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
+  zsh_extended_history=$(expr 1 - $?)
+}
+
+function get_history_file {
+  get_shell
+  histfile=$($shell -ci "echo \$HISTFILE")
+}
+
+get_history_file
 
 while getopts "h?n:f:c:l:" opt
 do
