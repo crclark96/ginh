@@ -7,11 +7,11 @@ chart_char='='
 OPTIND=1 # reset getopts
 max_len=0
 
-function show_help {
+function show_help() {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
-function separator {
+function separator() {
   for (( n=0; n<=line_len; n++ ))
   do
     printf "-"
@@ -20,18 +20,18 @@ function separator {
 }
 
 # check the shell used to instantiate ginh
-function get_shell {
+function get_shell() {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
 }
 
 # check for zsh extended history format style
-function zsh_extended_history {
+function zsh_extended_history() {
   $shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
   return $?
 }
 
 # get location of history file for the shell used to instantiate ginh
-function get_history_file {
+function get_history_file() {
   get_shell
   histfile=$($shell -ci "echo \$HISTFILE")
 }
