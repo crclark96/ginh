@@ -19,14 +19,18 @@ function separator {
   printf "\n"
 }
 
+# check the shell used to instantiate ginh
 function get_shell {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
-
-  # check for zsh extended history format style
-  $shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
-  zsh_extended_history=$(expr 1 - $?)
 }
 
+# check for zsh extended history format style
+function zsh_extended_history {
+  $shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
+  return $?
+}
+
+# get location of history file for the shell used to instantiate ginh
 function get_history_file {
   get_shell
   histfile=$($shell -ci "echo \$HISTFILE")
@@ -62,7 +66,7 @@ shift $((OPTIND-1))
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-if [ $zsh_extended_history -eq 1 ]
+if zsh_extended_history;
 then
   calc=$(grep -v -E '^\s*$|^\s+' $histfile | awk -F ';' '{print $2}' |
     awk '{print $1}' | sort | uniq -c | sort -rn)
