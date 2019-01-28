@@ -12,12 +12,12 @@ fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 function debug() {
-  git rev-parse HEAD
-  uname -a
+  echo "commit: $(git rev-parse HEAD)"
+  echo "uname: $(uname -a)"
   get_shell
-  echo "$shell"
+  echo "shell: $shell"
   get_history_file
-  echo "$histfile"
+  echo "histfile: $histfile"
 }
 
 function show_help() {
