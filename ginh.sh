@@ -22,14 +22,24 @@ function separator() {
   printf "\n"
 }
 
-# if match fish history format, remove fish formating
-function fish_filter() {
-  if grep -E "$fish_filter_string" <<< $1 >/dev/null; then
-    grep -E "$fish_filter_string" <<< $1 \
-      | sed -e "s/$fish_filter_string//g"
+# generic shell formatting filter
+function shell_filter() {
+  if grep -E "$2" <<< $1 >/dev/null; then
+    grep -E "$2" <<< $1 \
+      | sed -e "s/$2//g"
   else
     echo "$1"
   fi
+}
+
+# if match fish history format, remove fish formating
+function fish_filter() {
+  shell_filter "$1" "$fish_filter_string"
+}
+
+# if match zsh_extended history format, remove zsh_extended formating
+function zsh_extended_filter() {
+  shell_filter "$1" "$zsh_extended_filter_string"
 }
 
 # check the shell used to instantiate ginh
