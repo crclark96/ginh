@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -a counts freq cmds
+declare -a counts freq cmds filters
 line_len=$(($(/usr/bin/tput cols) - 2)) # get terminal width
 num_entries=15
 chart_char='='
@@ -48,7 +48,7 @@ function sudo_filter() {
   sed -e "s/$sudo_filter_string//g" <<< $1
 }
 
-# get command, sort, and count
+# get command name, sort, and count
 function final_filter() {
   echo "$1" \
     | awk '{print $1}' \
@@ -103,20 +103,15 @@ shift $((OPTIND-1))
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-if zsh_extended_history; then
-  calc=$(grep -v -E '^\s*$|^\s+' "$histfile" \
-          | awk -F ';' '{print $2}' \
-          | awk '{print $1}' \
-          | sort \
-          | uniq -c \
-          | sort -rn)
-else
-  calc=$(grep -v -E '^\s*$|^\s+' "$histfile" \
-          | awk '{print $1}' \
-          | sort \
-          | uniq -c \
-          | sort -rn)
-fi
+filters+=("fish_filter")
+filters+=("zsh_extended_filter")
+filters+=("sudo_filter")
+filters+=("final_filter")
+
+calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
+for (( n=0; n<${#filters[@]}; n++ )); do
+  calc=$(${filters[n]} "$calc")
+done
 
 for (( n=0; n<=num_entries; n++ )); do
 # gather counts and cmds
