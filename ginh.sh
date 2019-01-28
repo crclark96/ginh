@@ -65,7 +65,12 @@ function get_shell() {
 # get location of history file for the shell used to instantiate ginh
 function get_history_file() {
   get_shell
-  histfile=$($shell -ci "echo \$HISTFILE")
+  if [ "$shell" == "fish" ]; then
+    # after 2.3.0, fish history is saved here, and cannot be changed
+    histfile=~/.local/share/fish/fish_history
+  else
+    histfile=$($shell -ci "echo \$HISTFILE")
+  fi
 }
 
 get_history_file
