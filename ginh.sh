@@ -92,8 +92,6 @@ function version_gt() {
   test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
-get_history_file
-
 while getopts "h?dn:f:c:l:" opt; do
   case "$opt" in
   h|\?)
@@ -122,6 +120,8 @@ done
 shift $((OPTIND-1))
 
 [ "${1:-}" = "--" ] && shift
+
+get_history_file
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
