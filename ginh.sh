@@ -22,6 +22,16 @@ function separator() {
   printf "\n"
 }
 
+# if match fish history format, remove fish formating
+function fish_filter() {
+  if grep -E "$fish_filter_string" <<< $1 >/dev/null; then
+    grep -E "$fish_filter_string" <<< $1 \
+      | sed -e "s/$fish_filter_string//g"
+  else
+    echo "$1"
+  fi
+}
+
 # check the shell used to instantiate ginh
 function get_shell() {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
