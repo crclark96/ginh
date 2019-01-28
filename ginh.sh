@@ -121,7 +121,9 @@ shift $((OPTIND-1))
 
 [ "${1:-}" = "--" ] && shift
 
-get_history_file
+if [ -z "$histfile" ]; then
+  get_history_file
+fi
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
