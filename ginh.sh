@@ -73,6 +73,12 @@ function get_history_file() {
   fi
 }
 
+# test if the first argument is greater than the second argument,
+# following versioning logic
+function version_gt() {
+  test "$(printf '%s' "$@" | sort -V | head -n 1)" != "$1"
+}
+
 get_history_file
 
 while getopts "h?n:f:c:l:" opt; do
