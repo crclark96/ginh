@@ -9,6 +9,7 @@ max_len=0
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\- cmd: "
+sudo_filter_string="^sudo "
 
 function show_help() {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
@@ -40,6 +41,20 @@ function fish_filter() {
 # if match zsh_extended history format, remove zsh_extended formating
 function zsh_extended_filter() {
   shell_filter "$1" "$zsh_extended_filter_string"
+}
+
+# remove 'sudo's
+function sudo_filter() {
+  sed -e "s/$sudo_filter_string//g" <<< $1
+}
+
+# get command, sort, and count
+function final_filter() {
+  echo "$1" \
+    | awk '{print $1}' \
+    | sort \
+    | uniq -c \
+    | sort -rn
 }
 
 # check the shell used to instantiate ginh
