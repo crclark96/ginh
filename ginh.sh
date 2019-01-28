@@ -24,6 +24,11 @@ function show_help() {
   echo "usage: $0 [-h] [-d] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
+function err() {
+  echo "$1"
+  exit 1
+}
+
 function separator() {
   for (( n=0; n<=line_len; n++ ))
   do
@@ -68,6 +73,9 @@ function final_filter() {
 # check the shell used to instantiate ginh
 function get_shell() {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
+  if [ -z "$shell" ]; then
+    err "couldn't autodetect shell, try specifying a file using -f"
+  fi
 }
 
 # get location of history file for the shell used to instantiate ginh
@@ -83,6 +91,9 @@ function get_history_file() {
     fi
   else
     histfile=$($shell -ci "echo \$HISTFILE")
+  fi
+  if [ -z "$histfile" ]; then
+    err "couldn't autodetect history file, try specifying a file using -f"
   fi
 }
 
