@@ -66,8 +66,13 @@ function get_shell() {
 function get_history_file() {
   get_shell
   if [ "$shell" == "fish" ]; then
-    # after 2.3.0, fish history is saved here, and cannot be changed
-    histfile=~/.local/share/fish/fish_history
+    # fish history cannot be changed, determine location based on version
+    fish_version="$(fish -v | awk '{print $3}')"
+    if version_gt "$fish_version" "2.3.0"; then
+      histfile="$HOME/.local/share/fish/fish_history"
+    else
+      histfile="$HOME/.config/fish/fish_history"
+    fi
   else
     histfile=$($shell -ci "echo \$HISTFILE")
   fi
