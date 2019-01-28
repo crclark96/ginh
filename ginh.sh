@@ -21,7 +21,7 @@ function debug() {
 }
 
 function show_help() {
-  echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
+  echo "usage: $0 [-h] [-d] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
 function separator() {
