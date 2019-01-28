@@ -62,12 +62,6 @@ function get_shell() {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
 }
 
-# check for zsh extended history format style
-function zsh_extended_history() {
-  $shell -ci "setopt" 2>&1 | grep extendedhistory >/dev/null
-  return $?
-}
-
 # get location of history file for the shell used to instantiate ginh
 function get_history_file() {
   get_shell
