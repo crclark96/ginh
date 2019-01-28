@@ -8,7 +8,7 @@ OPTIND=1 # reset getopts
 max_len=0
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
-fish_filter_string="^\- cmd: "
+fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 function show_help() {
@@ -20,13 +20,13 @@ function separator() {
   do
     printf "-"
   done
-  printf "\n"
+  printf "\\n"
 }
 
 # generic shell formatting filter
 function shell_filter() {
-  if grep -E "$2" <<< $1 >/dev/null; then
-    grep -E "$2" <<< $1 \
+  if grep -E "$2" <<< "$1" >/dev/null; then
+    grep -E "$2" <<< "$1" \
       | sed -e "s/$2//g"
   else
     echo "$1"
@@ -45,7 +45,7 @@ function zsh_extended_filter() {
 
 # remove 'sudo's
 function sudo_filter() {
-  sed -e "s/$sudo_filter_string//g" <<< $1
+  sed -e "s/$sudo_filter_string//g" <<< "$1"
 }
 
 # get command name, sort, and count
@@ -149,7 +149,7 @@ for (( n=0; n<=$((num_entries - 1)); n++ )); do
   printf "  "
   printf "%s" "${counts[n]}"
 
-  printf "\n"
+  printf "\\n"
 done
 
 separator
