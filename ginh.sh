@@ -50,8 +50,7 @@ function sudo_filter() {
 
 # get command name, sort, and count
 function final_filter() {
-  echo "$1" \
-    | awk '{print $1}' \
+  awk '{print $1}' <<< "$1" \
     | sort \
     | uniq -c \
     | sort -rn
@@ -81,7 +80,7 @@ function get_history_file() {
 # test if the first argument is greater than the second argument,
 # following versioning logic
 function version_gt() {
-  test "$(printf '%s' "$@" | sort -V | head -n 1)" != "$1"
+  test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
 get_history_file
@@ -125,9 +124,9 @@ done
 
 for (( n=0; n<=num_entries; n++ )); do
 # gather counts and cmds
-  cmds[n]=$(echo "$calc" | sed -ne "$((1 + n))p")
-  counts[n]=$(echo "${cmds[n]}" | awk '{print $1}')
-  s=$(echo "${cmds[n]}" | cut -d' ' -f2-)
+  cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc")
+  counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
+  s=$(awk '{print $2}' <<< "${cmds[n]}")
   max_len=$((
   ${#s} > max_len ?
     ${#s}:
@@ -147,11 +146,11 @@ done
 separator
 
 for (( n=0; n<=$((num_entries - 1)); n++ )); do
-  s=$(echo "${cmds[n]}" | cut -d' ' -f2-)
+  s=$(awk '{print $2}' <<< "${cmds[n]}")
   for (( m=0; m<=max_len-${#s} - 2; m++ )); do
     printf " "
   done
-  printf "%s " "$(echo "${cmds[n]}" | awk '{print $2}')"
+  printf "%s " "$(awk '{print $2}' <<< "${cmds[n]}")"
 
   for (( m=0; m<=freq[n]; m++ )); do
     printf "%s" "$chart_char"
