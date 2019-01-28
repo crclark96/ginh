@@ -125,8 +125,6 @@ if [ -z "$histfile" ]; then
   get_history_file
 fi
 
-echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
-
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
 filters+=("sudo_filter")
@@ -137,15 +135,23 @@ for (( n=0; n<${#filters[@]}; n++ )); do
   calc=$(${filters[n]} "$calc")
 done
 
+# choose smaller of requested number of entries and actual number
+num_lines=$(wc -l <<< "$calc")
+num_entries=$((num_lines < num_entries
+                ? num_lines
+                : num_entries))
+
+echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
+
 for (( n=0; n<=num_entries; n++ )); do
 # gather counts and cmds
-  cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc")
+  cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
   counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
   s=$(awk '{print $2}' <<< "${cmds[n]}")
   max_len=$((
-  ${#s} > max_len ?
-    ${#s}:
-    max_len
+  ${#s} > max_len
+    ? ${#s}
+    : max_len
   ))
 done
 
