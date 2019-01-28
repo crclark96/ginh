@@ -74,7 +74,7 @@ function final_filter() {
 function get_shell() {
   shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
   if [ -z "$shell" ]; then
-    err "couldn't autodetect shell, try specifying a file using -f"
+    err "unable to autodetect shell, try specifying a file using -f"
   fi
 }
 
@@ -93,7 +93,7 @@ function get_history_file() {
     histfile=$($shell -ci "echo \$HISTFILE")
   fi
   if [ -z "$histfile" ]; then
-    err "couldn't autodetect history file, try specifying a file using -f"
+    err "unable to autodetect history file, try specifying a file using -f"
   fi
 }
 
