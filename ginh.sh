@@ -11,6 +11,15 @@ zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
+function debug() {
+  git rev-parse HEAD
+  uname -a
+  get_shell
+  echo "$shell"
+  get_history_file
+  echo "$histfile"
+}
+
 function show_help() {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
@@ -85,10 +94,14 @@ function version_gt() {
 
 get_history_file
 
-while getopts "h?n:f:c:l:" opt; do
+while getopts "h?dn:f:c:l:" opt; do
   case "$opt" in
   h|\?)
     show_help
+    exit 0
+    ;;
+  d)
+    debug
     exit 0
     ;;
   n)
