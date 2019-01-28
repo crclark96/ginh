@@ -7,6 +7,9 @@ chart_char='='
 OPTIND=1 # reset getopts
 max_len=0
 
+zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
+fish_filter_string="^\- cmd: "
+
 function show_help() {
   echo "usage: $0 [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
