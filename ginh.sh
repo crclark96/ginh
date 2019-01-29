@@ -6,6 +6,7 @@ num_entries=15
 chart_char='='
 OPTIND=1 # reset getopts
 max_len=0
+ppid=$PPID
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\\- cmd: "
@@ -72,7 +73,7 @@ function final_filter() {
 
 # check the shell used to instantiate ginh
 function get_shell() {
-  shell=$(ps -p $PPID -o comm= | sed -e 's/^-//')
+  shell=$(ps -p $ppid -o comm= | sed -e 's/^-//')
   if [ -z "$shell" ]; then
     err "unable to autodetect shell, try specifying a file using -f"
   fi
@@ -103,7 +104,7 @@ function version_gt() {
   test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
-while getopts "h?dn:f:c:l:" opt; do
+while getopts "h?dn:f:c:l:t:" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -124,6 +125,9 @@ while getopts "h?dn:f:c:l:" opt; do
     ;;
   l)
     line_len=$OPTARG
+    ;;
+  t)
+    ppid=$OPTARG
     ;;
   esac
 done
