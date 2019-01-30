@@ -1,0 +1,4 @@
+language: minimal
+script:
+- shellcheck *.sh
+- ./tests.sh
