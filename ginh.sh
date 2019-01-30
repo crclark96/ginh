@@ -104,98 +104,104 @@ function version_gt() {
   test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
-while getopts "h?dn:f:c:l:t:" opt; do
-  case "$opt" in
-  h|\?)
-    show_help
-    exit 0
-    ;;
-  d)
-    debug
-    exit 0
-    ;;
-  n)
-    num_entries=$OPTARG
-    ;;
-  f)
-    histfile=$OPTARG
-    ;;
-  c)
-    chart_char="$OPTARG"
-    ;;
-  l)
-    line_len=$OPTARG
-    ;;
-  t)
-    ppid=$OPTARG
-    ;;
-  esac
-done
+function main() {
 
-shift $((OPTIND-1))
-
-[ "${1:-}" = "--" ] && shift
-
-if [ -z "$histfile" ]; then
-  get_history_file
-fi
-
-filters+=("fish_filter")
-filters+=("zsh_extended_filter")
-filters+=("sudo_filter")
-filters+=("final_filter")
-
-calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
-for (( n=0; n<${#filters[@]}; n++ )); do
-  calc=$(${filters[n]} "$calc")
-done
-
-# choose smaller of requested number of entries and actual number
-num_lines=$(wc -l <<< "$calc")
-num_entries=$((num_lines < num_entries
-                ? num_lines
-                : num_entries))
-
-echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
-
-for (( n=0; n<=num_entries; n++ )); do
-# gather counts and cmds
-  cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
-  counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
-  s=$(awk '{print $2}' <<< "${cmds[n]}")
-  max_len=$((
-  ${#s} > max_len
-    ? ${#s}
-    : max_len
-  ))
-done
-
-max_len=$((max_len + 1))
-
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
-# calculate frequencies
-  (( freq[n]=counts[n] * \
-    $((line_len - max_len - ${#counts[0]} - 2)) \
-    / counts[0] ))
-done
-
-separator
-
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
-  s=$(awk '{print $2}' <<< "${cmds[n]}")
-  for (( m=0; m<=max_len-${#s} - 2; m++ )); do
-    printf " "
+  while getopts "h?dn:f:c:l:t:" opt; do
+    case "$opt" in
+    h|\?)
+      show_help
+      exit 0
+      ;;
+    d)
+      debug
+      exit 0
+      ;;
+    n)
+      num_entries=$OPTARG
+      ;;
+    f)
+      histfile=$OPTARG
+      ;;
+    c)
+      chart_char="$OPTARG"
+      ;;
+    l)
+      line_len=$OPTARG
+      ;;
+    t)
+      ppid=$OPTARG
+      ;;
+    esac
   done
-  printf "%s " "$(awk '{print $2}' <<< "${cmds[n]}")"
 
-  for (( m=0; m<=freq[n]; m++ )); do
-    printf "%s" "$chart_char"
+  shift $((OPTIND-1))
+
+  [ "${1:-}" = "--" ] && shift
+
+  if [ -z "$histfile" ]; then
+    get_history_file
+  fi
+
+  filters+=("fish_filter")
+  filters+=("zsh_extended_filter")
+  filters+=("sudo_filter")
+  filters+=("final_filter")
+
+  calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
+  for (( n=0; n<${#filters[@]}; n++ )); do
+    calc=$(${filters[n]} "$calc")
   done
-  printf "  "
-  printf "%s" "${counts[n]}"
 
-  printf "\\n"
-done
+  # choose smaller of requested number of entries and actual number
+  num_lines=$(wc -l <<< "$calc")
+  num_entries=$((num_lines < num_entries
+                  ? num_lines
+                  : num_entries))
 
-separator
+  echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
+
+  for (( n=0; n<=num_entries; n++ )); do
+  # gather counts and cmds
+    cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
+    counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
+    s=$(awk '{print $2}' <<< "${cmds[n]}")
+    max_len=$((
+    ${#s} > max_len
+      ? ${#s}
+      : max_len
+    ))
+  done
+
+  max_len=$((max_len + 1))
+
+  for (( n=0; n<=$((num_entries - 1)); n++ )); do
+  # calculate frequencies
+    (( freq[n]=counts[n] * \
+      $((line_len - max_len - ${#counts[0]} - 2)) \
+      / counts[0] ))
+  done
+
+  separator
+
+  for (( n=0; n<=$((num_entries - 1)); n++ )); do
+    s=$(awk '{print $2}' <<< "${cmds[n]}")
+    for (( m=0; m<=max_len-${#s} - 2; m++ )); do
+      printf " "
+    done
+    printf "%s " "$(awk '{print $2}' <<< "${cmds[n]}")"
+
+    for (( m=0; m<=freq[n]; m++ )); do
+      printf "%s" "$chart_char"
+    done
+    printf "  "
+    printf "%s" "${counts[n]}"
+
+    printf "\\n"
+  done
+
+  separator
+}
+
+# call main if script is not being sourced
+[ "$0" = "${BASH_SOURCE[0]}" ] && main "$@"
 
