@@ -158,7 +158,7 @@ num_entries=$((num_lines < num_entries
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-for (( n=0; n<=num_entries; n++ )); do
+for (( n=0; n<=$((num_entries - 1)); n++ )); do
 # gather counts and cmds
   cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
   counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
