@@ -66,12 +66,15 @@ fi
 
 
 # run shellcheck for script linting and error catching
-git diff HEAD --cached --name-only | grep ".sh" | xargs shellcheck
-result=$?
-if [ $result -ne 0 ]; then
-  echo
-  echo "Please address the above issues before committing"
-  exit 1
+files="$(git diff HEAD --cached --name-only | grep ".sh")"
+if [ -z "$files" ]; then
+  echo "$files" | xargs shellcheck
+  result=$?
+  if [ $result -ne 0 ]; then
+    echo
+    echo "Please address the above issues before committing"
+    exit 1
+  fi
 fi
 
 # If there are whitespace errors, print the offending file names and fail.
