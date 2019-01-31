@@ -158,7 +158,7 @@ num_entries=$((num_lines < num_entries
 
 echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
 
-for (( n=0; n<=num_entries; n++ )); do
+for (( n=0; n<num_entries; n++ )); do
 # gather counts and cmds
   cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
   counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
@@ -172,7 +172,7 @@ done
 
 max_len=$((max_len + 1))
 
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
+for (( n=0; n<num_entries; n++ )); do
 # calculate frequencies
   (( freq[n]=counts[n] * \
     $((line_len - max_len - ${#counts[0]} - 2)) \
@@ -181,7 +181,7 @@ done
 
 separator
 
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
+for (( n=0; n<num_entries; n++ )); do
   s=$(awk '{print $2}' <<< "${cmds[n]}")
   for (( m=0; m<=max_len-${#s} - 2; m++ )); do
     printf " "
