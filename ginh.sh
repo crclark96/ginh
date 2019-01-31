@@ -172,7 +172,7 @@ done
 
 max_len=$((max_len + 1))
 
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
+for (( n=0; n<num_entries; n++ )); do
 # calculate frequencies
   (( freq[n]=counts[n] * \
     $((line_len - max_len - ${#counts[0]} - 2)) \
@@ -181,7 +181,7 @@ done
 
 separator
 
-for (( n=0; n<=$((num_entries - 1)); n++ )); do
+for (( n=0; n<num_entries; n++ )); do
   s=$(awk '{print $2}' <<< "${cmds[n]}")
   for (( m=0; m<=max_len-${#s} - 2; m++ )); do
     printf " "
