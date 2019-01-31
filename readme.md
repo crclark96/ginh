@@ -1,5 +1,7 @@
 # ginh.sh
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6429fde76ae4e529ec53f6ee613fcea)](https://app.codacy.com/app/crclark96/ginh?utm_source=github.com&utm_medium=referral&utm_content=crclark96/ginh&utm_campaign=Badge_Grade_Dashboard)
+
 ginh is not a histogram
 
 usage: `./ginh.sh [-h] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]`
