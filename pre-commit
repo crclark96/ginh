@@ -67,7 +67,7 @@ fi
 
 # run shellcheck for script linting and error catching
 files="$(git diff HEAD --cached --name-only | grep ".sh")"
-if [ -z "$files" ]; then
+if [ ! -z "$files" ]; then
   echo "$files" | xargs shellcheck
   result=$?
   if [ $result -ne 0 ]; then
