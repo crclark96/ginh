@@ -197,6 +197,5 @@ for (( n=0; n<num_entries; n++ )); do
   printf "\\n"
 done
 
-
 separator
 
