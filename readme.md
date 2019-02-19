@@ -1,6 +1,9 @@
 # ginh.sh
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6429fde76ae4e529ec53f6ee613fcea)](https://app.codacy.com/app/crclark96/ginh?utm_source=github.com&utm_medium=referral&utm_content=crclark96/ginh&utm_campaign=Badge_Grade_Dashboard)
+![no.](https://img.shields.io/github/last-commit/crclark96/ginh.svg?style=popout)
+![no.](https://img.shields.io/github/languages/top/crclark96/ginh.svg?colorB=purple&style=popout)
+
 
 ginh is not a histogram
 
