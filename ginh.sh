@@ -13,12 +13,10 @@ fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 # define colors
-lpurple='\033[1;35m'
-cyan='\033[0;36m'
-lcyan='\033[1;36m'
-white='\033[1;37m'
+source ./colors.sh
 
-nc='\033[0m' # no color
+color1=$lred
+color2=$lcyan
 
 function debug() {
   echo "commit: $(git rev-parse HEAD)"
@@ -42,7 +40,7 @@ function separator() {
   for (( n=0; n<=line_len; n++ ))
   do
     # shellcheck disable=SC2059
-    printf "${white}-${nc}"
+    printf "${white}-${nocolor}"
   done
   printf "\\n"
 }
@@ -191,21 +189,23 @@ done
 separator
 
 for (( n=0; n<num_entries; n++ )); do
+  if [[ $((n % 2)) == 0 ]]; then
+    color=$color1
+  else
+    color=$color2
+  fi
   s=$(awk '{print $2}' <<< "${cmds[n]}")
   for (( m=0; m<=max_len-${#s} - 2; m++ )); do
     printf " "
   done
-  printf "${lpurple}%s${nc} " "$(awk '{print $2}' <<< "${cmds[n]}")"
+  printf "${color}%s${nocolor} " "$(awk '{print $2}' <<< "${cmds[n]}")"
 
   for (( m=0; m<=freq[n]; m++ )); do
-    if [[ $((n % 2)) == 0 ]]; then
-      printf "${lcyan}%s${nc}" "$chart_char"
-    else
-      printf "${cyan}%s${nc}" "$chart_char"
-    fi
+    printf "${color}%s${nocolor}" "$chart_char"
   done
+
   printf "  "
-  printf "${lpurple}%s${nc}" "${counts[n]}"
+  printf "${color}%s${nocolor}" "${counts[n]}"
 
   printf "\\n"
 done
