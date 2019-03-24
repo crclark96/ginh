@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Color constants for terminal
 export black="\\033[0;30m"
 export red="\\033[0;31m"
 export green="\\033[0;32m"

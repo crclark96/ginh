@@ -4,6 +4,7 @@ all: ginh
 
 ginh:
 	cp ginh.sh ginh
+	sed -i "s/source \(.*\)/cat \1/e" ginh
 	chmod 755 ginh
 
 install: ginh
