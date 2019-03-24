@@ -15,8 +15,8 @@ sudo_filter_string="^sudo "
 # define colors
 source ./colors.sh
 
-color1=$lred
-color2=$lcyan
+color1=$lcyan
+color2=$lpurple
 
 function debug() {
   echo "commit: $(git rev-parse HEAD)"
