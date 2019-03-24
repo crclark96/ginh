@@ -13,17 +13,9 @@ fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 # define colors
-red='\033[0;31m'
-lred='\033[1;31m'
-green='\033[0;32m'
-lgreen='\033[1;32m'
-orange='\033[0;33m'
-blue='\033[0;34m'
-purple='\033[0;35m'
 lpurple='\033[1;35m'
 cyan='\033[0;36m'
 lcyan='\033[1;36m'
-yellow='\033[1;33m'
 white='\033[1;37m'
 
 nc='\033[0m' # no color
@@ -49,6 +41,7 @@ function err() {
 function separator() {
   for (( n=0; n<=line_len; n++ ))
   do
+    # shellcheck disable=SC2059
     printf "${white}-${nc}"
   done
   printf "\\n"
