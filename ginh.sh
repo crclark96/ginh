@@ -59,12 +59,12 @@ function shell_filter() {
   fi
 }
 
-# if match fish history format, remove fish formating
+# if match fish history format, remove fish formatting
 function fish_filter() {
   shell_filter "$1" "$fish_filter_string"
 }
 
-# if match zsh_extended history format, remove zsh_extended formating
+# if match zsh_extended history format, remove zsh_extended formatting
 function zsh_extended_filter() {
   shell_filter "$1" "$zsh_extended_filter_string"
 }
