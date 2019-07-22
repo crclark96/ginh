@@ -13,7 +13,11 @@ fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 # define colors
-source ./colors.sh
+lpurple="\033[1;35m"
+lcyan="\033[1;36m"
+white="\033[1;37m"
+
+nocolor='\033[0m' # no color
 
 color1=$lcyan
 color2=$lpurple
