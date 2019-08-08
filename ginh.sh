@@ -71,7 +71,29 @@ function zsh_extended_filter() {
 
 # remove 'sudo's
 function sudo_filter() {
-  sed -e "s/$sudo_filter_string//g" <<< "$1"
+  echo "${1//$sudo_filter_string//}"
+}
+
+# use alias command to reverse aliases found in history
+function reverse_aliases_filter() {
+  if [ "$shell" == "fish" ]; then
+    flags="c"
+  else
+    flags="ci"
+  fi
+  # compiles a slew of sed substitution commands, e.g.
+  # s/alias_name/command_name/g
+  sed_replacements=$($shell -$flags \'alias\' \
+    | grep -v "/" \
+    | grep -v "='nocorrect" \
+    | tr "=" " " \
+    | grep -o "\w\+ '\w\+" \
+    | tr -d \"\'\(\)\{\" \
+    | sed -e 's| |\\\\>\||' \
+    | awk '{print $1}' \
+    | xargs -I _ echo s\|\\\<_\|g\;\ \
+    | tr -d "\n")
+  sed -e "$sed_replacements" <<< "$1"
 }
 
 # get command name, sort, and count
@@ -154,6 +176,7 @@ fi
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
 filters+=("sudo_filter")
+filters+=("reverse_aliases_filter")
 filters+=("final_filter")
 
 calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
