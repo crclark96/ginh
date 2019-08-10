@@ -175,8 +175,8 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
-filters+=("sudo_filter")
 filters+=("reverse_aliases_filter")
+filters+=("sudo_filter")
 filters+=("final_filter")
 
 calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
