@@ -32,7 +32,7 @@ function debug() {
 }
 
 function show_help() {
-  echo "usage: $0 [-h] [-d] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
+  echo "usage: $0 [-h] [-d] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
 function err() {
@@ -137,7 +137,7 @@ function version_gt() {
   test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
-while getopts "h?dn:f:c:l:t:" opt; do
+while getopts "h?dan:f:c:l:t:" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -162,6 +162,9 @@ while getopts "h?dn:f:c:l:t:" opt; do
   t)
     ppid=$OPTARG
     ;;
+  a)
+    alias=0
+    ;;
   esac
 done
 
@@ -175,7 +178,9 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
-filters+=("reverse_aliases_filter")
+if [ -z $alias ]; then
+  filters+=("reverse_aliases_filter")
+fi
 filters+=("sudo_filter")
 filters+=("final_filter")
 
