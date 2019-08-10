@@ -7,6 +7,7 @@ chart_char='='
 OPTIND=1 # reset getopts
 max_len=0
 ppid=$PPID
+alias=1
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\\- cmd: "
@@ -32,7 +33,7 @@ function debug() {
 }
 
 function show_help() {
-  echo "usage: $0 [-h] [-d] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
+  echo "usage: $0 [-h] [-d] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
 }
 
 function err() {
@@ -137,7 +138,7 @@ function version_gt() {
   test "$(sort -V <<< "$@" | head -n 1)" != "$1"
 }
 
-while getopts "h?dn:f:c:l:t:" opt; do
+while getopts "h?dan:f:c:l:t:" opt; do
   case "$opt" in
   h|\?)
     show_help
@@ -162,6 +163,9 @@ while getopts "h?dn:f:c:l:t:" opt; do
   t)
     ppid=$OPTARG
     ;;
+  a)
+    alias=0
+    ;;
   esac
 done
 
@@ -175,8 +179,10 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
+if [ $alias -eq 1 ]; then
+  filters+=("reverse_aliases_filter")
+fi
 filters+=("sudo_filter")
-filters+=("reverse_aliases_filter")
 filters+=("final_filter")
 
 calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
