@@ -152,6 +152,7 @@ while getopts "h?dan:f:c:l:t:" opt; do
     ;;
   f)
     histfile=$OPTARG
+    alias=0
     ;;
   c)
     chart_char="$OPTARG"
