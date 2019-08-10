@@ -7,18 +7,27 @@
 
 ginh is not a histogram
 
-usage: `./ginh.sh [-h] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]`
+## Usage
 
-`ginh.sh` generates a bar chart of your most frequently used shell commands,
-according to your shell's history file (or another file of your choosing, using
-the `-f` flag).
+```
+Usage: `ginh [-h] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]`
 
-other flags include `-n` for specifying the number of bars, `-c` to select
-the character used in each bar, `-l` to change the maximum line length
-(bar "height"), and `-a` to treat aliases as first class entries (default
-behavior is to revert aliases into their target command).
+`ginh` generates a bar chart of your most frequently used shell commands,
+according to your shell's history file.
 
-example:
+Options:
+  -a            disable reversing aliases to find the command they reference
+  -n NUM        number of entries to include in the chart, default $num_entries
+  -f FILE       history file use, default determined by the calling shell
+  -c CHAR       character to use for chart bars, default '='
+  -l NUM        width of chart, default width of terminal
+
+Miscellaneous:
+  -h            display this help message and exit
+  -d            print useful debug info
+```
+
+Example:
 
 ```
 entries=15, file=/Users/crclark/.bash_history, char==, len=78
@@ -41,9 +50,29 @@ entries=15, file=/Users/crclark/.bash_history, char==, len=78
 -------------------------------------------------------------------------------
 ```
 
-## help
+## Installation
+
+### From source
+
+```
+git clone https://github.com/crclark96/ginh.git
+cd ginh
+sudo make install
+```
+
+### From packages
+
+#### Debian
+
+Debian packages are available [here](https://github.com/crclark96/ginh/releases).
+
+#### Arch
+
+[Install ginh through the Arch User Repositores](https://aur.archlinux.org/packages/ginh/)
+
+## Help
 
 if you don't see your graph updating after running a few commands, this is
-  because the working history is stored in memory, and not the history file.
-  running `history -a` should update the history file and you'll be good to
-  go!
+because the working history is stored in memory, and not the history file.
+running `history -a` should update the history file and you'll be good to
+go!

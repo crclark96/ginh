@@ -32,7 +32,22 @@ function debug() {
 }
 
 function show_help() {
-  echo "usage: $0 [-h] [-d] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]"
+  echo "\
+Usage: $0 [-h] [-d] [-a] [-n entries] [-f hist_file] [-c chart_char] [-l line_len]
+$0 generates a bar chart of your most frequently used shell commands.
+
+Options:
+  -a            disable reversing aliases to find the command they reference
+  -n NUM        number of entries to include in the chart, default $num_entries
+  -f FILE       history file use, default determined by the calling shell
+  -c CHAR       character to use for chart bars, default '='
+  -l NUM        width of chart, default width of terminal
+
+Miscellaneous:
+  -h            display this help message and exit
+  -d            print useful debug info
+
+Report bugs to: https://github.com/crclark96/ginh/issues"
 }
 
 function err() {
