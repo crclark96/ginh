@@ -7,7 +7,6 @@ chart_char='='
 OPTIND=1 # reset getopts
 max_len=0
 ppid=$PPID
-alias=1
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\\- cmd: "
@@ -179,7 +178,7 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
-if [ $alias -eq 1 ]; then
+if [ -z $alias ]; then
   filters+=("reverse_aliases_filter")
 fi
 filters+=("sudo_filter")
