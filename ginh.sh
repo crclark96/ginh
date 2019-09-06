@@ -86,7 +86,8 @@ function zsh_extended_filter() {
 
 # remove 'sudo's
 function sudo_filter() {
-  echo "${1//$sudo_filter_string//}"
+# shellcheck disable=SC2001
+  sed -e "s/$sudo_filter_string//g" <<< "$1"
 }
 
 # use alias command to reverse aliases found in history
@@ -102,10 +103,11 @@ function reverse_aliases_filter() {
     | grep -v "/" \
     | grep -v "='nocorrect" \
     | tr "=" " " \
-    | grep -E -o "[[:alnum:]]+ '[[:alnum:]]+" \
+    | grep -E -o "[[:alnum:]]+ '.*'" \
     | tr -d \"\'\(\)\{\" \
-    | sed -e 's| |\\\\>\||' \
-    | awk '{print $1}' \
+    | tr -d \"\\\\\" \
+    | sed -E -e 's|([^[:space:]]+) |\1\\\\>\||' \
+    | awk -F "|" 'BEGIN { OFS = FS }{print $1, $2}' \
     | xargs -I _ echo s\|\\\<_\|g\;\ \
     | tr -d "\n")
   sed -e "$sed_replacements" <<< "$1"
