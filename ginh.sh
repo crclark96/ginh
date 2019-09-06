@@ -102,7 +102,7 @@ function reverse_aliases_filter() {
     | grep -v "/" \
     | grep -v "='nocorrect" \
     | tr "=" " " \
-    | grep -o "\w\+ '\w\+" \
+    | grep -E -o "[[:alnum:]]+ '[[:alnum:]]+" \
     | tr -d \"\'\(\)\{\" \
     | sed -e 's| |\\\\>\||' \
     | awk '{print $1}' \
