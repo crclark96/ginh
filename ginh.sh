@@ -196,8 +196,10 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
+if [ ! $(uname | grep Darwin) ]; then
 if [ -z $alias ]; then
   filters+=("reverse_aliases_filter")
+fi
 fi
 filters+=("sudo_filter")
 filters+=("final_filter")
