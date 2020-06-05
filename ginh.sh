@@ -1,11 +1,10 @@
 #!/bin/bash
 
-declare -a counts freq cmds filters
+declare -a filters
 line_len=$(($(/usr/bin/tput cols) - 2)) # get terminal width
 num_entries=15
 chart_char='='
 OPTIND=1 # reset getopts
-max_len=0
 ppid=$PPID
 
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
@@ -13,14 +12,9 @@ fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
 
 # define colors
-lpurple="\033[1;35m"
-lcyan="\033[1;36m"
 white="\033[1;37m"
 
 nocolor='\033[0m' # no color
-
-color1=$lcyan
-color2=$lpurple
 
 function debug() {
   echo "commit: $(git rev-parse HEAD)"
@@ -196,7 +190,7 @@ fi
 
 filters+=("fish_filter")
 filters+=("zsh_extended_filter")
-if [ ! $(uname | grep Darwin) ]; then
+if [ ! "$(uname | grep Darwin)" ]; then
 if [ -z $alias ]; then
   filters+=("reverse_aliases_filter")
 fi
@@ -209,58 +203,4 @@ for (( n=0; n<${#filters[@]}; n++ )); do
   calc=$(${filters[n]} "$calc")
 done
 
-# choose smaller of requested number of entries and actual number
-num_lines=$(wc -l <<< "$calc")
-num_entries=$((num_lines < num_entries
-                ? num_lines
-                : num_entries))
-
-echo "entries=$num_entries, file=$histfile, char=$chart_char, len=$line_len"
-
-for (( n=0; n<num_entries; n++ )); do
-# gather counts and cmds
-  cmds[n]=$(sed -ne "$((1 + n))p" <<< "$calc") # isolate line n+1
-  counts[n]=$(awk '{print $1}' <<< "${cmds[n]}")
-  s=$(awk '{print $2}' <<< "${cmds[n]}")
-  max_len=$((
-  ${#s} > max_len
-    ? ${#s}
-    : max_len
-  ))
-done
-
-max_len=$((max_len + 1))
-
-for (( n=0; n<num_entries; n++ )); do
-# calculate frequencies
-  (( freq[n]=counts[n] * \
-    $((line_len - max_len - ${#counts[0]} - 2)) \
-    / counts[0] ))
-done
-
-separator
-
-for (( n=0; n<num_entries; n++ )); do
-  if [[ $((n % 2)) == 0 ]]; then
-    color=$color1
-  else
-    color=$color2
-  fi
-  s=$(awk '{print $2}' <<< "${cmds[n]}")
-  for (( m=0; m<=max_len-${#s} - 2; m++ )); do
-    printf " "
-  done
-  printf "${color}%s${nocolor} " "$(awk '{print $2}' <<< "${cmds[n]}")"
-
-  for (( m=0; m<=freq[n]; m++ )); do
-    printf "${color}%s${nocolor}" "$chart_char"
-  done
-
-  printf "  "
-  printf "${color}%s${nocolor}" "${counts[n]}"
-
-  printf "\\n"
-done
-
-separator
-
+./chart -n "$num_entries" -c "$chart_char" -l "$line_len" <<< "$calc"
