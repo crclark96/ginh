@@ -11,6 +11,7 @@ ppid=$PPID
 zsh_extended_filter_string="^:[0-9 ]*:[0-9];"
 fish_filter_string="^\\- cmd: "
 sudo_filter_string="^sudo "
+doas_filter_string="^doas "
 
 # define colors
 lpurple="\033[1;35m"
@@ -88,6 +89,12 @@ function zsh_extended_filter() {
 function sudo_filter() {
 # shellcheck disable=SC2001
   sed -e "s/$sudo_filter_string//g" <<< "$1"
+}
+
+# remove 'doas's
+function doas_filter() {
+# shellcheck disable=SC2001
+  sed -e "s/$doas_filter_string//g" <<< "$1"
 }
 
 # use alias command to reverse aliases found in history
@@ -202,6 +209,7 @@ if [ -z $alias ]; then
 fi
 fi
 filters+=("sudo_filter")
+filters+=("doas_filter")
 filters+=("final_filter")
 
 calc=$(grep -v -E '^\s*$|^\s+' "$histfile")
